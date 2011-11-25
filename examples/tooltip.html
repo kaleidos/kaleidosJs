@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <link rel="stylesheet" media="all" href="../css/tooltip.css" />
+        <script type="text/javascript" src="../jquery.min.js"></script>    
+        <script type="text/javascript" src="../tooltip.js"></script>    
+        <style>
+            body{padding-bottom: 300px;}
+            ul{margin: 0 auto; display: block; width: 500px; margin-bottom: 50px;}
+            
+            /* With arrow example */
+            .arrow{
+                background-color: #000;
+                width: 11px;
+                height: 11px;
+                position: relative;
+                top: -25px; 
+                margin: 0 auto;
+                -webkit-transform: rotate(45deg); -moz-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg);
+            }
+        </style>
+    </head>
+    <body>
+        <ul id="test1">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul>
+        
+        <ul id="test2">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul>        
+        
+        <ul id="test3">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul>    
+        
+        <ul id="test4">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul> 
+        
+        <p>Focus Event</p>
+        <div id="test5">
+            <input type="text" data-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." />
+        </div>
+        
+        <p>With arrow</p>
+        <ul id="test6">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul>     
+        
+        <p>Dialog</p>   
+        <div id="test7">
+            <input type="text" data-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." />
+        </div>
+        
+        <p>Fade</p>
+        <ul id="test8">
+            <li><a title="1- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">xxxx</a></li>
+            <li><a title="2- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">yyyy</a></li>
+            <li><a title="3- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">zzzz</a></li>
+            <li><a title="4- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">ooo</a></li>
+            <li><a title="5- Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris interdum dapibus tortor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus." href="">uuuu</a></li>
+        </ul>  
+                
+        <script type="text/javascript">
+            $(document).ready(function(){
+                $("#test1 a").tooltip();
+                $("#test2 a").tooltip({'position': 'top left'});
+                $("#test3 a").tooltip({'position': 'bottom right'});
+                $("#test4 a").tooltip({'position': 'top center'});
+                
+                $("#test5 input").tooltip({
+                    'position': 'top right',
+                    'open_event': 'focus', 
+                    'close_event': 'blur',
+                    'html': function(self){
+                        return "<div><p>"+$(self).data('text')+"</p></div>";
+                     }
+                });
+                
+                $("#test6 a").tooltip({ 
+                    'margin_top': 15,
+                    'html': function(self){
+                        return "<div class='arrow'></div><p>"+$(self).attr('title')+"</p></div></div>";
+                     }                    
+                })
+                
+                var input = $("#test7 input").tooltip({
+                    'position': 'top right',
+                    'open_event': 'focus', 
+                    'close_event': false,
+                    'html': function(self){
+                        return "<div><p>"+$(self).data('text')+"</p><p><a class='close' href=''>Close</a></p></div>";
+                     },
+                     'onCreate': function(self){
+                         $(self.tooltip).find('.close').click(function(e){
+                            self.close();
+                            e.preventDefault();
+                        });
+                     }
+                });
+                
+                $("#test8 a").tooltip({
+                    'position': 'top center',
+                    'open_effect': 'fadeIn',
+                    'close_effect': 'fadeOut'
+                });
+            });
+        </script>    
+    </body>
+</html>
