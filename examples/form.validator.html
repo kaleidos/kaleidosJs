@@ -1,0 +1,183 @@
+<html>
+    <head>
+        <link rel="stylesheet" media="all" href="../css/tooltip.css" />
+        <script type="text/javascript" src="../jquery.min.js"></script>    
+        <script type="text/javascript" src="../form.validator.js"></script>
+        <script>
+            var form = '';
+            $(document).ready(function(){
+                //normal form
+                form = $("#form1").validate({
+                    errorsMsgs: {
+                        name: {required: 'Name Required.'},
+                        email: {required: 'Mail Required.', email: 'Email invalid'},
+                    }
+                });
+
+                //validate onchange
+                form = $("#form2").validate({
+                    validateonchange: true
+                });     
+                
+                //global errors
+                form = $("#form3").validate({
+                    inlineerrors: false,
+                    errorsMsgs: {
+                        name: {required: 'Name Required.'},
+                        required: {required: 'Checkbox Required.'},
+                        email: {required: 'Mail Required.', email: 'Email invalid'},
+                    }                    
+                });    
+                
+                //ajax form
+                form = $("#form4").validate({
+                    ajax: {
+                      url: "",
+                      success: function(){
+                        alert("ok");
+                      }
+                    }               
+                });
+                
+                //custom validation
+                form = $("#form5").validate({
+                    errorsMsgs: {
+                        number: {custom: 'Number!'}
+                    },           
+                    customVal: {
+                        number: function(field){
+                            return /^-?[0-9]*(\.[0-9]+)?$/.test(field.val());
+                        }
+                    }                    
+                });       
+                
+                //custom validation
+                form = $("#form6").validate({
+                    errorsMsgs: {
+                        number: {custom: 'Number!'}
+                    },           
+                    customVal: {
+                        password2: function(field){
+                            if(field.val() != $('#password').val()){
+                                return false;
+                            }else{
+                                return true;        
+                            }
+                        }
+                    }                    
+                });        
+            });
+        </script>    
+    </head>
+    <body>
+        <form id="form1" action="" method="get">
+         <fieldset>
+           <legend>normal form</legend>
+           <p>
+             <label for="cname">Name</label>
+             <em>*</em><input type="text" required="required" name="name" id="cname" />
+           </p>
+           <p>
+             <label for="cemail">E-Mail</label>
+             <em>*</em><input type="email" required="required" name="email" id="cemail" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form>   
+         
+        <form id="form2" action="" method="get">
+         <fieldset>
+           <legend>onchange form</legend>
+           <p>
+             <label for="cname2">Name</label>
+             <em>*</em><input type="text" required="required" name="name" id="cname2" />
+           </p>
+           <p>
+             <label for="cemail2">E-Mail</label>
+             <em>*</em><input type="email" required="required" name="email" id="cemail2" />
+           </p>
+           <p>
+            <label for="required">Required</label>
+            <em>*</em><input type="checkbox" required="required" name="required" id="required" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form>  
+         
+        <form id="form3" action="" method="get">
+         <fieldset>
+           <legend>global errors</legend>
+           <p>
+             <label for="cname3">Name</label>
+             <em>*</em><input type="text" required="required" name="name" id="cname3" />
+           </p>
+           <p>
+             <label for="cemail3">E-Mail</label>
+             <em>*</em><input type="email" required="required" name="email" id="cemail3" />
+           </p>
+           <p>
+            <label for="required3">Required</label>
+            <em>*</em><input type="checkbox" required="required" name="required" id="required3" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form> 
+
+        <form id="form4" action="" method="get">
+         <fieldset>
+           <legend>ajax form</legend>
+           <p>
+             <label for="cname4">Name</label>
+             <em>*</em><input type="text" required="required" name="name" id="cname4" />
+           </p>
+           <p>
+             <label for="cemail4">E-Mail</label>
+             <em>*</em><input type="email" required="required" name="email" id="cemail4" />
+           </p>
+           <p>
+            <label for="required4">Required</label>
+            <em>*</em><input type="checkbox" required="required" name="required" id="required4" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form>  
+         
+        <form id="form5" action="" method="get">
+         <fieldset>
+           <legend>Custom validation</legend>
+           <p>
+             <label for="number">Number</label>
+             <em>*</em><input type="text" required="required" name="number" id="number" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form> 
+         
+        <form id="form6" action="" method="get">
+         <fieldset>
+           <legend>Custom validation 2</legend>
+           <p>
+             <label for="password">Password 1</label>
+             <em>*</em><input type="text" required="required" name="password" id="password" />
+           </p>
+           <p>
+             <label for="password2">Password 2</label>
+             <em>*</em><input type="text" required="required" name="password2" id="password2" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form>   
+    </body>
+</html>    
