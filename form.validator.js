@@ -2,32 +2,37 @@
  $.fn.validate = function(self) {
      var form = $(this);
      var defaults = {
-         validclass: 'valid-field',
-         invalidclass: 'invalid-field',
-         globalerrorobject: false,
-         inlineerrors: true,
-         validateonchange: false,
+         validClass: 'valid-field',
+         invalidClass: 'invalid-field',
+         globalErrorObject: false,
+         inlineErrors: true,
+         validateOnchange: false,
          ajax: false,
-         printError:function(field){
+         presubmitValidation: false,
+         printGlobarError: function(text, id){
+            $("#field-"+id).remove();
+            if(!self.globalErrorObject){
+                var globalerror = $(document.createElement('div'))
+                .attr('class', 'global-error');
+                form.prepend(globalerror);
+                self.globalErrorObject = form.find('.global-error');
+            }
+            
+            self.globalErrorObject.append("<p id='field-"+id+"'>"+text+"</p>");             
+         },
+         printError: function(field){
             var error = field.data('error'); 
             $("#field-"+field.attr('id')).remove();
 
             if(error){
-                field.addClass(self.invalidclass);                
-                if(self.inlineerrors){
+                field.addClass(self.invalidClass);                
+                if(self.inlineErrors){
                     $("<span id='field-"+field.attr('id')+"'>"+field.data('error')+"</span>").insertAfter(field);
                 }else{
-                    if(!self.globalerrorobject){
-                        var globalerror = $(document.createElement('div'))
-                        .attr('class', 'global-error');
-                        form.prepend(globalerror);
-                        self.globalerrorobject = form.find('.global-error');
-                    }
-                    
-                    self.globalerrorobject.append("<p id='field-"+field.attr('id')+"'>"+field.data('error')+"</p>");
+                    self.printGlobarError(field.data('error'), field.attr('id'));
                 }
             }else{
-                field.addClass(self.validclass);    
+                field.addClass(self.validClass);    
             }             
          },
          printErrors: function(){
@@ -50,6 +55,11 @@
          submit: function(event){
              valid = self.validate();
              self.printErrors();
+             
+             if(self.presubmitValidation){
+                valid = self.presubmitValidation();
+             }
+             
              if(!valid){
                  event.preventDefault();
              }else{
@@ -111,11 +121,12 @@
                 if(!valid)field.data('error', msgs.email);
             }   
             
-            if(valid && self.customVal[field.attr('name')]!=undefined){
-                valid = self.customVal[field.attr('name')](field);
-                if(!valid)field.data('error', msgs.custom);
+            if(self.customVal!=undefined){
+                if(valid && self.customVal[field.attr('name')]!=undefined){
+                    valid = self.customVal[field.attr('name')](field);
+                    if(!valid)field.data('error', msgs.custom);
+                }
             }
-   
             return valid;
          },
          errorsMsgs: {},
@@ -126,7 +137,7 @@
 
      self.elements = form.find('input,textarea');
      
-     if(self.validateonchange){
+     if(self.validateOnchange){
          self.elements.each(function(){
             var bindevent = 'keyup';
             if($(this).attr('type')=='checkbox'){

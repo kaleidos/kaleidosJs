@@ -16,12 +16,12 @@
 
                 //validate onchange
                 form = $("#form2").validate({
-                    validateonchange: true
+                    validateOnchange: true
                 });     
                 
                 //global errors
                 form = $("#form3").validate({
-                    inlineerrors: false,
+                    inlineErrors: false,
                     errorsMsgs: {
                         name: {required: 'Name Required.'},
                         required: {required: 'Checkbox Required.'},
@@ -59,6 +59,7 @@
                     customVal: {
                         password2: function(field){
                             if(field.val() != $('#password').val()){
+                                form.printGlobarError("Password 1 must be the same as password 2", "password-global");
                                 return false;
                             }else{
                                 return true;        
