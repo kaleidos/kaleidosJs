@@ -1,4 +1,4 @@
-(function($){  
+(function($){
  $.fn.validate = function(self) {
      var form = $(this);
      var defaults = {
