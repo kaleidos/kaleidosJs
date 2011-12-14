@@ -1,2 +1,3 @@
 .klightbox{display: none;}
 #overlay{display: none; position: absolute; top: 0; left: 0; z-index: 90;}
+#ajax-loader{display: none; position: absolute;}

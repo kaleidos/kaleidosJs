@@ -23,7 +23,7 @@
         ajaxInit: function(){},
         ajaxEnd: function(){},
         onload: function(){},
-        open: function(){
+        openstandard: function(){
             if(this.overlay){                 
                 this.overlay.css({
                     'height': $(window).height(),
@@ -38,33 +38,17 @@
                 });
             }
                     
-            $('.klightbox').css('z-index', 95);        
-                        
+            $('.klightbox').css('z-index', 95);
+            
             if(!this.first_load || this.forceReload){
-                if(this.source=='ajax' && this.ajaxSource){
-                    this.ajaxInit();
-                    var self = this;
-                    $.ajax({
-                      url: this.ajaxSource,
-                      success: function(data){
-                        if(self.ajaxSourceTarget){
-                            self.ajaxSourceTarget.html(data);
-                        }else{
-                            self.selector.html(data);
-                        }
-                        self.ajaxEnd();
-                      }
-                    });
-                }else{
-                    if(this.source=='iframe' && this.iframeSource){
-                        var iframe = $(document.createElement('iframe'))
-                        .attr({'src': this.iframeSource, 'width': this.iframeWidth, 'height': this.iframeHeight});
-                        
-                        if(this.iframeSourceTarget){
-                            this.iframeSourceTarget.html(iframe);
-                        }else{
-                            this.selector.html(iframe);
-                        }
+                if(this.source=='iframe' && this.iframeSource){
+                    var iframe = $(document.createElement('iframe'))
+                    .attr({'src': this.iframeSource, 'width': this.iframeWidth, 'height': this.iframeHeight});
+                    
+                    if(this.iframeSourceTarget){
+                        this.iframeSourceTarget.html(iframe);
+                    }else{
+                        this.selector.html(iframe);
                     }
                 }
 
@@ -112,9 +96,35 @@
                 if(this.overlay) this.overlay.show();
                 this.selector.show();
                 this.onload();
+            } 
+        },
+        open: function(){
+            if(this.source=='ajax' && this.ajaxSource && (!this.first_load || this.forceReload)){
+                $("#ajax-loader").css({
+                    'top': ($(document).scrollTop()) + ($(window).height()/2) - (55/2),
+                    'left': ($(document).width()/2)-(54/2),
+                    'display': 'block'
+                });                
+                this.ajaxInit();
+                var self = this;
+                $.ajax({
+                  url: this.ajaxSource,
+                  success: function(data){
+                    if(self.ajaxSourceTarget){
+                        self.ajaxSourceTarget.html(data);
+                    }else{
+                        self.selector.html(data);
+                    }
+                    self.ajaxEnd();
+                    self.openstandard();
+                  }
+                });
+            }else{
+                this.openstandard();
             }
         },
         close: function(){
+            $("#ajax-loader").hide();
             if(this.fadeOut){
                 if(this.overlay) this.overlay.fadeOut(this.fadeOutDuration);
                 this.selector.fadeOut(this.fadeOutDuration);
