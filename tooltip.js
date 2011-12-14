@@ -1,8 +1,8 @@
 (function($){  
- $.fn.tooltip = function(options) {  
+ $.fn.tooltip = function(params) {  
     var defaults = {
         'appendTo': 'body',
-        'class': 'tooltip',
+        'className': 'tooltip',
         'relative': false,
         'width': 500,
         'html':  function(elm){
@@ -28,10 +28,10 @@
         'max_left': 'none',
         'max_top': 'none',
         'min_left': 'none',
-        'min_top': 'none',        
+        'min_top': 'none'    
     };
         
-    var options = $.extend(defaults, options);
+    var options = $.extend(defaults, params);
     
     return this.each(function(){
         var self = this;
@@ -64,7 +64,7 @@
             options.onBeforeShow();
             if(self.tooltip==undefined){
                 self.tooltip = $(document.createElement('div'))
-                .attr('class', options.class);
+                .attr('class', options.className);
                 $(self.tooltip).html(options.html(self));
                 $(self.tooltip).appendTo(options.appendTo);
                 $(self.tooltip).css(options.css);

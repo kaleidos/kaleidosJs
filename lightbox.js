@@ -24,15 +24,15 @@
         ajaxEnd: function(){},
         onload: function(){},
         open: function(){
-            if(self.overlay){                 
-                self.overlay.css({
+            if(this.overlay){                 
+                this.overlay.css({
                     'height': $(window).height(),
                     'width': $(window).width(),
-                    'background': self.background,
-                    'opacity': self.opacity
+                    'background': this.background,
+                    'opacity': this.opacity
                 });
-                
-                self.overlay.click(function(){
+                var self = this;
+                this.overlay.click(function(){
                     self.close();
                     $(this).unbind('click');
                 });
@@ -40,11 +40,12 @@
                     
             $('.klightbox').css('z-index', 95);        
                         
-            if(!self.first_load || self.forceReload){
-                if(self.source=='ajax' && self.ajaxSource){
-                    self.ajaxInit();
+            if(!this.first_load || this.forceReload){
+                if(this.source=='ajax' && this.ajaxSource){
+                    this.ajaxInit();
+                    var self = this;
                     $.ajax({
-                      url: self.ajaxSource,
+                      url: this.ajaxSource,
                       success: function(data){
                         if(self.ajaxSourceTarget){
                             self.ajaxSourceTarget.html(data);
@@ -55,45 +56,45 @@
                       }
                     });
                 }else{
-                    if(self.source=='iframe' && self.iframeSource){
+                    if(this.source=='iframe' && this.iframeSource){
                         var iframe = $(document.createElement('iframe'))
-                        .attr({'src': self.iframeSource, 'width': self.iframeWidth, 'height': self.iframeHeight});
+                        .attr({'src': this.iframeSource, 'width': this.iframeWidth, 'height': this.iframeHeight});
                         
-                        if(self.iframeSourceTarget){
-                            self.iframeSourceTarget.html(iframe);
+                        if(this.iframeSourceTarget){
+                            this.iframeSourceTarget.html(iframe);
                         }else{
-                            self.selector.html(iframe);
+                            this.selector.html(iframe);
                         }
                     }
                 }
 
-                self.selector.css({
+                this.selector.css({
                     'display': 'block',
                     'position': 'absolute',
                     'width': self.width,
                     'visibility': 'hidden'
                 });
                                 
-                if(self.overrideTop){
-                    top = self.overrideTop;
+                if(this.overrideTop){
+                    top = this.overrideTop;
                 }else{
-                    if(self.valing){
-                        var top = ($(document).scrollTop()) + ($(window).height()/2) - (self.selector.outerHeight()/2);
-                        if (top < self.lightboxTop) {
-                            top = $(document).scrollTop()+self.lightboxTop;
+                    if(this.valing){
+                        var top = ($(document).scrollTop()) + ($(window).height()/2) - (this.selector.outerHeight()/2);
+                        if (top < this.lightboxTop) {
+                            top = $(document).scrollTop()+this.lightboxTop;
                         }                      
                     }else{
-                        top = $(document).scrollTop()+self.lightboxTop;
+                        top = $(document).scrollTop()+this.lightboxTop;
                     }
                 }    
                 
-                if(self.overrideLeft){
-                    left = self.overrideLeft;
+                if(this.overrideLeft){
+                    left = this.overrideLeft;
                 }else{
-                    left = ($(document).width()/2)-(self.width/2);
+                    left = ($(document).width()/2)-(this.width/2);
                 }
                 
-                self.selector.css({
+                this.selector.css({
                     'display': 'none',
                     'visibility': 'visible',
                     'left': left,
@@ -101,27 +102,27 @@
                     'z-index': 100
                 });
                 
-                self.first_load = true;
+                this.first_load = true;
             }
             
-            if(self.fadeIn){
-                if(self.overlay) self.overlay.fadeIn(self.fadeInDuration);
-                self.selector.fadeIn(self.fadeInDuration, self.onload);
+            if(this.fadeIn){
+                if(this.overlay) this.overlay.fadeIn(this.fadeInDuration);
+                this.selector.fadeIn(this.fadeInDuration, this.onload);
             }else{
-                if(self.overlay) self.overlay.show();
-                self.selector.show();
-                self.onload();
+                if(this.overlay) this.overlay.show();
+                this.selector.show();
+                this.onload();
             }
         },
         close: function(){
-            if(self.fadeOut){
-                if(self.overlay) self.overlay.fadeOut(self.fadeOutDuration);
-                self.selector.fadeOut(self.fadeOutDuration);
+            if(this.fadeOut){
+                if(this.overlay) this.overlay.fadeOut(this.fadeOutDuration);
+                this.selector.fadeOut(this.fadeOutDuration);
             }else{
-                if(self.overlay) self.overlay.hide();
-                self.selector.hide();
+                if(this.overlay) this.overlay.hide();
+                this.selector.hide();
             }
-            self.selector.data('status', 'closed');
+            this.selector.data('status', 'closed');
         }
      };
      
