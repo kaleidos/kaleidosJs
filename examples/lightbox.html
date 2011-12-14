@@ -13,7 +13,7 @@
         <script>
             var lightbox = '';
             $(document).ready(function(){
-                lightbox = $("#lightbox1").lightbox({
+                var lightbox = $("#lightbox1").lightbox({
                     width: 600
                 });
                 
@@ -27,7 +27,7 @@
                     lightbox.open();
                 });
                 
-                lightbox2 = $("#lightbox2").lightbox({
+                var lightbox2 = $("#lightbox2").lightbox({
                     fadeIn: true,
                     fadeOut: true,
                     width: 600

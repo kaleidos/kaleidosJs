@@ -1,6 +1,5 @@
 (function($){
- $.fn.validate = function(self) {
-     var form = $(this);
+ $.fn.validate = function(params) {
      var defaults = {
          validClass: 'valid-field',
          invalidClass: 'invalid-field',
@@ -10,77 +9,70 @@
          ajax: false,
          presubmitValidation: false,
          printGlobarError: function(text, id){
-            $("#field-"+id).remove();
-            if(!self.globalErrorObject){
+            this.removeGlobarError(id);
+            if(!this.globalErrorObject){
                 var globalerror = $(document.createElement('div'))
                 .attr('class', 'global-error');
-                form.prepend(globalerror);
-                self.globalErrorObject = form.find('.global-error');
+                this.form.prepend(globalerror);
+                this.globalErrorObject = this.form.find('.global-error');
             }
             
-            self.globalErrorObject.append("<p id='field-"+id+"'>"+text+"</p>");             
+            this.globalErrorObject.append("<p id='field-"+id+"'>"+text+"</p>");             
          },
+         removeGlobarError: function(id){
+            $("#field-"+id).remove();            
+         },         
          printError: function(field){
             var error = field.data('error'); 
             $("#field-"+field.attr('id')).remove();
 
             if(error){
-                field.addClass(self.invalidClass);                
-                if(self.inlineErrors){
+                field.addClass(this.invalidClass);                
+                if(this.inlineErrors){
                     $("<span id='field-"+field.attr('id')+"'>"+field.data('error')+"</span>").insertAfter(field);
                 }else{
-                    self.printGlobarError(field.data('error'), field.attr('id'));
+                    this.printGlobarError(field.data('error'), field.attr('id'));
                 }
             }else{
-                field.addClass(self.validClass);    
+                field.addClass(this.validClass);    
             }             
          },
          printErrors: function(){
-             self.elements.each(function(){
-                 self.printError($(this));
-             });
-         },
-         getAllErrors: function(){
-             //need validate first
-             var errors = new Array();
-             self.elements.each(function(){
-                var error = $(this).data('error'); 
-                if(error!=undefined){
-                    errors.push(error);
-                }
-             });
-             
-             return errors;
+             for(var i=0; i<this.elements.length; i++){
+                 this.printError($(this.elements[i]));
+             }
          },
          submit: function(event){
-             valid = self.validate();
-             self.printErrors();
+             valid = this.validate();
+             this.printErrors();
              
-             if(self.presubmitValidation){
-                valid = self.presubmitValidation();
+             if(this.presubmitValidation){
+                var valid2 = this.presubmitValidation();
+                if(valid) valid = valid2;
              }
              
              if(!valid){
                  event.preventDefault();
              }else{
-                 if(self.ajax){
+                 if(this.ajax){
                      event.preventDefault();
-                     $.ajax(self.ajax);
+                     $.ajax(this.ajax);
                 }
              }
          },
          validate: function(){
              var valid = true;
-             self.elements.each(function(){
-                if(!self.isValid($(this))){
+             for(var i=0; i<this.elements.length; i++){
+                if(!this.isValid($(this.elements[i]))){
                      valid = false;
-                }
-             });
+                }                 
+             }
+
              return valid;
          },
          validateField: function(field){
-            self.isValid(field);
-            self.printError(field);
+            this.isValid(field);
+            this.printError(field);
          },
          isValid: function(field){
             if(field.attr('type')=='submit'){
@@ -93,8 +85,8 @@
                 'email': 'Mail invalid'
             };
             
-            if(self.errorsMsgs[field.attr('name')]!=undefined){
-                var msgs = $.extend(defaultmsgs, self.errorsMsgs[field.attr('name')]);
+            if(this.errorsMsgs[field.attr('name')]!=undefined){
+                var msgs = $.extend(defaultmsgs, this.errorsMsgs[field.attr('name')]);
             }else{
                 var msgs = defaultmsgs;
             }
@@ -121,9 +113,9 @@
                 if(!valid)field.data('error', msgs.email);
             }   
             
-            if(self.customVal!=undefined){
-                if(valid && self.customVal[field.attr('name')]!=undefined){
-                    valid = self.customVal[field.attr('name')](field);
+            if(this.customVal!=undefined){
+                if(valid && this.customVal[field.attr('name')]!=undefined){
+                    valid = this.customVal[field.attr('name')](this, field);
                     if(!valid)field.data('error', msgs.custom);
                 }
             }
@@ -133,29 +125,34 @@
          elements: new Array()
      };
      
-     var self = $.extend(defaults, self);
+     var self = $.extend(defaults, params);
 
-     self.elements = form.find('input,textarea');
-     
-     if(self.validateOnchange){
-         self.elements.each(function(){
-            var bindevent = 'keyup';
-            if($(this).attr('type')=='checkbox'){
-                bindevent='change';
-            }
+     if($(this).data('validator')!=undefined){
+         self = $.extend($(this).data('validator'), self); 
+     }else{
+         self.elements = $(this).find('input,textarea,select');
+         
+         if(self.validateOnchange){
+             self.elements.each(function(){
+                var bindevent = 'keyup';
+                if($(this).attr('type')=='checkbox'){
+                    bindevent='change';
+                }
 
-            $(this).bind(bindevent, function(){
-               self.validateField($(this));
-            });            
+                $(this).bind(bindevent, function(){
+                   self.validateField($(this));
+                });            
+             });
+         }
+         
+         $(this).attr("novalidate", "novalidate")
+         .bind("submit", function(event){
+             self.submit(event);
          });
+         self.form = $(this);
      }
-
-     form.attr("novalidate", "novalidate");
      
-     $(form).bind("submit", function(event){
-         self.submit(event);
-     });
-     
+     $(this).data('lightbox', self);
      return self;
  };  
 })(jQuery);

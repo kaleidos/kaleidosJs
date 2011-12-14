@@ -44,28 +44,40 @@
                         number: {custom: 'Number!'}
                     },           
                     customVal: {
-                        number: function(field){
+                        number: function(self, field){
                             return /^-?[0-9]*(\.[0-9]+)?$/.test(field.val());
                         }
                     }                    
                 });       
                 
                 //custom validation
-                form = $("#form6").validate({
-                    errorsMsgs: {
-                        number: {custom: 'Number!'}
-                    },           
+                form = $("#form6").validate({ 
                     customVal: {
-                        password2: function(field){
+                        password2: function(self, field){
                             if(field.val() != $('#password').val()){
-                                form.printGlobarError("Password 1 must be the same as password 2", "password-global");
+                                self.printGlobarError("Password 1 must be the same as password 2", "password-global");
                                 return false;
                             }else{
+                                self.removeGlobarError("password-global");
                                 return true;        
                             }
                         }
                     }                    
-                });        
+                });       
+                
+                //custom validation
+                form = $("#form7").validate({
+                    presubmitValidation: function(){
+                        if(!this.form.find('input:checked').length){
+                            this.printGlobarError("select one", "select-one");    
+                            return false;
+                        }else{
+                            this.removeGlobarError("select-one");    
+                            return true;
+                        }
+                        
+                    }
+                });  
             });
         </script>    
     </head>
@@ -81,6 +93,14 @@
              <label for="cemail">E-Mail</label>
              <em>*</em><input type="email" required="required" name="email" id="cemail" />
            </p>
+           <p>
+             <label for="country">Country</label>
+             <em>*</em><select id="country" required="required" >
+                <option></option>
+                <option>Spain</option>
+                <option>EEUU</option>
+             </select>
+           </p>         
            <p>
              <input type="submit" value="Submit" class="submit">
            </p>
@@ -179,5 +199,22 @@
            </p>
          </fieldset>
          </form>   
+         
+        <form id="form7" action="" method="get">
+         <fieldset>
+           <legend>Custom validation 3</legend>
+           <p>
+             <label for="number">Number</label>
+             <em>*</em><input type="text" required="required" name="number" id="number" />
+           </p>           
+           <p>
+             <label for="password2">Select one</label>
+             <em>*</em><input type="radio" name="radio" /> <input type="radio" name="radio" /> <input type="radio" name="radio" />
+           </p>
+           <p>
+             <input type="submit" value="Submit" class="submit">
+           </p>
+         </fieldset>
+         </form>          
     </body>
 </html>    

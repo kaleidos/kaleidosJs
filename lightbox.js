@@ -26,8 +26,8 @@
         open: function(){
             if(self.overlay){                 
                 self.overlay.css({
-                    'height': $(document).height(),
-                    'width': $(document).width(),
+                    'height': $(window).height(),
+                    'width': $(window).width(),
                     'background': self.background,
                     'opacity': self.opacity
                 });
