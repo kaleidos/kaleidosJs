@@ -7,16 +7,47 @@
          inlineErrors: true,
          validateOnchange: false,
          ajax: false,
+         ajaxSuccess: function(data){
+             if(data.submit){
+                self.form.submit();
+             }else{
+                var errors = new Array(); 
+                for(var i=0; i<data.global.length; i++){
+                    errors.push(data.global[i].error);
+                }
+                self.printGlobalErrors(errors);
+                
+                var field = 0;
+                for(var i=0; i<data.fields.length; i++){
+                    field = self.elements.filter("[name="+data.fields[i].field+"]");
+                    field.data('error', data.fields[i].msg);
+                }   
+                
+                self.printErrors();             
+             }
+         },
          presubmitValidation: false,
-         printGlobarError: function(text, id){
-            this.removeGlobarError(id);
+         onPrintError: function(){},
+         globalErrorContainer: function(){
             if(!this.globalErrorObject){
                 var globalerror = $(document.createElement('div'))
                 .attr('class', 'global-error');
                 this.form.prepend(globalerror);
                 this.globalErrorObject = this.form.find('.global-error');
+            }             
+         },
+         printGlobalErrors: function(errors){
+            var html = '';
+            for(var i=0; i<errors.length; i++){
+                html+= "<p>"+errors[i]+"</p>"
             }
-            
+            this.globalErrorContainer();     
+            this.globalErrorObject.html("");
+            this.globalErrorObject.append(html);             
+         },
+         printFieldGlobalError: function(text, id){
+            this.removeGlobarError(id);
+            this.globalErrorContainer();
             this.globalErrorObject.append("<p id='field-"+id+"'>"+text+"</p>");             
          },
          removeGlobarError: function(id){
@@ -31,11 +62,12 @@
                 if(this.inlineErrors){
                     $("<span id='field-"+field.attr('id')+"'>"+field.data('error')+"</span>").insertAfter(field);
                 }else{
-                    this.printGlobarError(field.data('error'), field.attr('id'));
+                    this.printFieldGlobalError(field.data('error'), field.attr('id'));
                 }
             }else{
                 field.addClass(this.validClass);    
-            }             
+            }    
+            this.onPrintError(field);         
          },
          printErrors: function(){
              for(var i=0; i<this.elements.length; i++){
@@ -55,8 +87,14 @@
                  event.preventDefault();
              }else{
                  if(this.ajax){
-                     event.preventDefault();
-                     $.ajax(this.ajax);
+                    event.preventDefault();
+                    $.ajax({
+                        dataType: 'json',
+                        url: this.form.attr('action'),
+                        method: this.form.attr('method'),
+                        self: this,
+                        success: this.ajaxSuccess
+                    });
                 }
              }
          },

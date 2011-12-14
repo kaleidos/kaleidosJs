@@ -3,6 +3,9 @@
         <title>Form validator</title>
         <script type="text/javascript" src="../jquery.min.js"></script>    
         <script type="text/javascript" src="../form.validator.js"></script>
+        <style>
+        .global-error{padding: 20px; background-color: #EFEFEF;}
+        </style>
         <script>
             var form = '';
             $(document).ready(function(){
@@ -31,12 +34,7 @@
                 
                 //ajax form
                 form = $("#form4").validate({
-                    ajax: {
-                      url: "",
-                      success: function(){
-                        alert("ok");
-                      }
-                    }               
+                    ajax: true
                 });
                 
                 //custom validation
@@ -48,7 +46,7 @@
                         number: function(self, field){
                             return /^-?[0-9]*(\.[0-9]+)?$/.test(field.val());
                         }
-                    }                    
+                    }
                 });       
                 
                 //custom validation
@@ -150,7 +148,7 @@
          </fieldset>
          </form> 
 
-        <form id="form4" action="" method="get">
+        <form id="form4" action="/exampleval.json" method="post">
          <fieldset>
            <legend>ajax form</legend>
            <p>
@@ -169,7 +167,7 @@
              <input type="submit" value="Submit" class="submit">
            </p>
          </fieldset>
-         </form>  
+        </form>  
          
         <form id="form5" action="" method="get">
          <fieldset>
