@@ -70,17 +70,17 @@
                $(autocomplete).find('li:first').addClass('selected');
            }
        }
-
-       /*self.input.bind('focusout', function(e) {
-        self.close();
-       });*/
-           
-       self.input.bind('keyup', function(e) {
-           if(e.which==13){
+       
+       self.input.bind('keydown', function(e) {
+           if(e.which==13 && self.open){       
                var selected = $("#autocomplete").find('.selected');
                self.selectItem($(selected).find('a'));
-               return false;
-           }
+               return false;               
+           }    
+       })    
+           
+       self.input.bind('keyup', function(e) {
+           if(e.which==13)return false;
            if(e.which==38 || e.which==40){
                if((e.which==40 && self.open==true || e.which==38)){
                 self.move (e.which);
@@ -138,6 +138,14 @@
 
                            self.open = true;
                            autocompleteinner.scrollTop(0);
+                           $(document).bind('click', function(e){
+                                if($(e.target).hasClass('item-autocomplete')){
+                                    self.selectItem(e.target);
+                                    $(this).unbind();
+                                }else{
+                                    self.close();
+                                }
+                           });
                        }else{
                            var autocomplete = $("#autocomplete");
                            var autocompleteinner = $("#autocompleteinner");
@@ -148,10 +156,9 @@
                         for(var i=0; i<data.items.length; i++){
                             $($(document.createElement('li')).append(
                                 $(document.createElement('a')).click(function(e){
-                                   self.selectItem(this);
                                    e.preventDefault();
                                 })
-                                .attr({'href': ''})
+                                .attr({'href': '', 'class': 'item-autocomplete'})
                                 .data(data.items[i])
                                 .html(data.items[i].label)                
                             )).appendTo(autocompleteinner);
