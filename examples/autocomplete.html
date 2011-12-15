@@ -1,0 +1,28 @@
+<html>
+    <head>
+        <title>Autocomplete</title>
+        <style>
+        *{margin: 0; padding: 0}
+        body{padding: 20;}
+        #autocomplete{border: 1px solid #000; padding: 2px 0;}
+        #autocomplete li{list-style: none;}
+        #autocomplete li.selected{background-color: #0A246A;}
+        #autocomplete li.selected a{color: #FFF;}
+        #autocomplete a{color: #000; line-height: 20px; display: block; padding: 0 14px; text-decoration: none;}
+        </style>
+        <script type="text/javascript" src="../jquery.min.js"></script>    
+        <script type="text/javascript" src="../autocomplete.js"></script>
+        <script>
+            $(document).ready(function(){
+                $("#autocomplete1").autocomplete({
+                    'source': '/exampleautocomplete.json'
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <form method="get" action="">
+            <input type="text" id="autocomplete1" />
+        </form>
+    </body>
+</head>
