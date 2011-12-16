@@ -1,0 +1,18 @@
+{
+    "name": "Text Destroyer",
+    "version": "1.0",
+    "description": "Añade textos largos",
+    "browser_action": {
+        "default_icon": "st.png",
+        "popup":"init.html"
+    },
+    "permissions": [
+      "tabs"
+    ],
+    "content_scripts": [
+        {
+          "matches": ["http://*/*"],
+          "js": ["jquery.min.js", "content.js"]
+        }
+    ]
+}
