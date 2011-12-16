@@ -5,6 +5,9 @@
          invalidClass: 'invalid-field',
          globalErrorObject: false,
          inlineErrors: true,
+         formData: function(form) {
+            return form.serialize();
+         },
          validateOnchange: false,
          ajax: false,
          ajaxSuccess: function(data){
@@ -59,10 +62,12 @@
 
             if(error){
                 field.addClass(this.invalidClass);                
-                if(this.inlineErrors){
-                    $("<span id='field-"+field.attr('id')+"'>"+field.data('error')+"</span>").insertAfter(field);
-                }else{
-                    this.printFieldGlobalError(field.data('error'), field.attr('id'));
+                if(!this.disableInlineErrors){
+                    if(this.inlineErrors){
+                        $("<span class='field-error' id='field-"+field.attr('id')+"'>"+field.data('error')+"</span>").insertAfter(field);
+                    }else{
+                        this.printFieldGlobalError(field.data('error'), field.attr('id'));
+                    }
                 }
             }else{
                 field.addClass(this.validClass);    
@@ -91,8 +96,9 @@
                     $.ajax({
                         dataType: 'json',
                         url: this.form.attr('action'),
-                        method: this.form.attr('method'),
+                        type: this.form.attr('method'),
                         self: this,
+                        data: this.formData(),
                         success: this.ajaxSuccess
                     });
                 }
