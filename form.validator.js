@@ -5,8 +5,8 @@
          invalidClass: 'invalid-field',
          globalErrorObject: false,
          inlineErrors: true,
-         formData: function(form) {
-            return form.serialize();
+         formData: function() {
+            return this.form.serialize();
          },
          validateOnchange: false,
          ajax: false,
