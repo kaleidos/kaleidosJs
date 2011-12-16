@@ -68,7 +68,7 @@
                 form = $("#form7").validate({
                     presubmitValidation: function(){
                         if(!this.form.find('input:checked').length){
-                            this.printGlobarError("select one", "select-one");    
+                            this.printFieldGlobalError("select one", "select-one");    
                             return false;
                         }else{
                             this.removeGlobarError("select-one");    
