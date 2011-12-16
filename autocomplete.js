@@ -98,7 +98,10 @@
                     type: 'get', 
                     data: self.dataAjax,
                     url: self.source,
+                    dataType: 'json',
                     success: function(data){
+                       console.log(data);
+                       if(!data.items.length)return false;
                        if(!self.open){
                            var autocomplete = $("#autocomplete");
                            if(!autocomplete.length){

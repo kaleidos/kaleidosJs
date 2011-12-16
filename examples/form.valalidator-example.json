@@ -1,0 +1,17 @@
+{
+    "submit": false,
+    "global": [
+        {
+            "error": "xxx"
+        },
+        {
+            "error": "yyy"
+        }
+    ],
+    "fields": [
+        {
+            "field": "name",
+            "msg": "Fail!!!"
+        }
+    ]
+}
