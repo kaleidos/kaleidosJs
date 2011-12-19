@@ -54,10 +54,10 @@
                     customVal: {
                         password2: function(self, field){
                             if(field.val() != $('#password').val()){
-                                self.printGlobarError("Password 1 must be the same as password 2", "password-global");
+                                self.printFieldGlobalError("Password 1 must be the same as password 2", "password-global");
                                 return false;
                             }else{
-                                self.removeGlobarError("password-global");
+                                self.removeGlobarError("password-global");   
                                 return true;        
                             }
                         }

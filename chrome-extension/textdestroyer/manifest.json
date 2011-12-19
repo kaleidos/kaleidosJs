@@ -3,7 +3,7 @@
     "version": "1.0",
     "description": "Añade textos largos",
     "browser_action": {
-        "default_icon": "st.png",
+        "default_icon": "td.png",
         "popup":"init.html"
     },
     "permissions": [
