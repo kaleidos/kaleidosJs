@@ -5,35 +5,29 @@
 (function($){
     var defaults = {
         defaultTimeOut: 5000,
-        notificationStyles: function() {
-            return {
-                padding: "12px 18px",
-                margin: "0 0 6px 0",
-                backgroundColor: "#000",
-                opacity: 0.8,
-                color: "#fff",
-                font: "normal 13px 'Droid Sans', sans-serif",
-                borderRadius: "3px",
-                boxShadow: "#999 0 0 12px",
-                width: "300px"
-            };
+        notificationStyles: {
+            padding: "12px 18px",
+            margin: "0 0 6px 0",
+            backgroundColor: "#000",
+            opacity: 0.8,
+            color: "#fff",
+            font: "normal 13px 'Droid Sans', sans-serif",
+            borderRadius: "3px",
+            boxShadow: "#999 0 0 12px",
+            width: "300px"
         },
-        notificationStylesHover: function() {
-            return {
-                opacity: 1,
-                boxShadow: "#000 0 0 12px"
-            };
+        notificationStylesHover: {
+            opacity: 1,
+            boxShadow: "#000 0 0 12px"
         },
-        container: function() {
-            return $("<div></div>");
-        },
+        container: $("<div></div>"),
         containerElement: function(message, title, iconUrl) {
             var self = this;
-            var element = $("<div />").css(this.notificationStyles());
+            var element = $("<div />").css(this.notificationStyles);
 
             element.hover(
-                function() { $(this).css(self.notificationStylesHover()); },
-                function() { $(this).css(self.notificationStyles()); }
+                function() { $(this).css(self.notificationStylesHover); },
+                function() { $(this).css(self.notificationStyles); }
             );
 
             var text_element_dom = $("<div />");
@@ -60,14 +54,11 @@
             element.append(text_element_dom);
             return element;
         },
-        containerStyles: function() {
-            var defaults_styles = {
-                "position": "absolute",
-                "z-index": 9999,
-                "top": "12px",
-                "right": "12px"
-            };
-            return defaults_styles;
+        containerStyles: {
+            "position": "absolute",
+            "z-index": 9999,
+            "top": "12px",
+            "right": "12px"
         },
         defaultClickElement: function(notify_dom_element) {
             notify_dom_element.hide();
@@ -94,8 +85,8 @@
         }
 
         this.options = $.extend({}, defaults, params);
-        this.container = $(this.options.container());
-        this.container.css(this.options.containerStyles());
+        this.container = $(this.options.container).clone();
+        this.container.css(this.options.containerStyles);
         this.container.attr('id', this.options.defaultContainerId);
         var self = this;
 
