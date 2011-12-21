@@ -10,6 +10,74 @@
            self.input.val($(elm).data('value'));
            self.close();
            self.onSelect();
+        },
+        printSource:function(data){
+           if(!data.items.length)return false;
+           if(!self.open){
+               var autocomplete = $("#autocomplete");
+               if(!autocomplete.length){
+                  autocomplete = $("<div id='autocomplete'><div id='autocompleteinner'></div></div>").appendTo("body");
+               }else{
+                   autocomplete.data("input").open = false;
+               }
+               autocomplete.data("input", self);
+               var autocompleteinner = $("#autocompleteinner");
+               var width = 'auto';
+               if(self.widthAutocomplete=='auto'){
+                   width = self.input.outerWidth()
+                   -parseInt(autocomplete.css('padding-left').replace('px', ''))
+                   -parseInt(autocomplete.css('padding-right').replace('px', ''))
+                   -parseInt(autocomplete.css('border-left-width').replace('px', ''))
+                   -parseInt(autocomplete.css('border-right-width').replace('px', ''));
+               }else{
+                    if(self.widthAutocomplete=='max'){
+                        width = 'auto';
+                    }else{
+                        width = self.widthAutocomplete;
+                    }
+               }
+               
+               autocomplete.css({
+                   'width': width,
+                   'display': 'block',
+                   'position': 'absolute',
+                   'top': $(self.input).offset().top+$(self.input).outerHeight(),
+                   'left': $(self.input).offset().left
+               });
+               
+               autocompleteinner.css({
+                   'overflow-x': 'auto',
+                   'max-height': self.maxHeight
+               });                       
+
+               self.open = true;
+               autocompleteinner.scrollTop(0);
+               $(document).bind('click', function(e){
+                    if($(e.target).hasClass('item-autocomplete')){
+                        self.selectItem(e.target);
+                        $(this).unbind();
+                    }else{
+                        self.close();
+                    }
+               });
+           }else{
+               var autocomplete = $("#autocomplete");
+               var autocompleteinner = $("#autocompleteinner");
+           }
+            
+            autocompleteinner.html("");
+            var html = "<ul>";
+            for(var i=0; i<data.items.length; i++){
+                $($(document.createElement('li')).append(
+                    $(document.createElement('a')).click(function(e){
+                       e.preventDefault();
+                    })
+                    .attr({'href': '', 'class': 'item-autocomplete'})
+                    .data(data.items[i])
+                    .html(data.items[i].label)                
+                )).appendTo(autocompleteinner);
+            }
+            html+="</ul>";
         }
     };
     
@@ -94,81 +162,17 @@
                if(self.input.val().length<self.startLength){
                     return false;  
                }
+               if(typeof self.source == 'object'){
+                self.printSource(self.source);
+               }else{
                 $.ajax({
                     type: 'get', 
                     data: self.dataAjax,
                     url: self.source,
                     dataType: 'json',
-                    success: function(data){
-                       console.log(data);
-                       if(!data.items.length)return false;
-                       if(!self.open){
-                           var autocomplete = $("#autocomplete");
-                           if(!autocomplete.length){
-                              autocomplete = $("<div id='autocomplete'><div id='autocompleteinner'></div></div>").appendTo("body");
-                           }else{
-                               autocomplete.data("input").open = false;
-                           }
-                           autocomplete.data("input", self);
-                           var autocompleteinner = $("#autocompleteinner");
-                           var width = 'auto';
-                           if(self.widthAutocomplete=='auto'){
-                               width = self.input.outerWidth()
-                               -parseInt(autocomplete.css('padding-left').replace('px', ''))
-                               -parseInt(autocomplete.css('padding-right').replace('px', ''))
-                               -parseInt(autocomplete.css('border-left-width').replace('px', ''))
-                               -parseInt(autocomplete.css('border-right-width').replace('px', ''));
-                           }else{
-                                if(self.widthAutocomplete=='max'){
-                                    width = 'auto';
-                                }else{
-                                    width = self.widthAutocomplete;
-                                }
-                           }
-                           
-                           autocomplete.css({
-                               'width': width,
-                               'display': 'block',
-                               'position': 'absolute',
-                               'top': $(self.input).offset().top+$(self.input).outerHeight(),
-                               'left': $(self.input).offset().left
-                           });
-                           
-                           autocompleteinner.css({
-                               'overflow-x': 'auto',
-                               'max-height': self.maxHeight
-                           });                       
-
-                           self.open = true;
-                           autocompleteinner.scrollTop(0);
-                           $(document).bind('click', function(e){
-                                if($(e.target).hasClass('item-autocomplete')){
-                                    self.selectItem(e.target);
-                                    $(this).unbind();
-                                }else{
-                                    self.close();
-                                }
-                           });
-                       }else{
-                           var autocomplete = $("#autocomplete");
-                           var autocompleteinner = $("#autocompleteinner");
-                       }
-                        
-                        autocompleteinner.html("");
-                        var html = "<ul>";
-                        for(var i=0; i<data.items.length; i++){
-                            $($(document.createElement('li')).append(
-                                $(document.createElement('a')).click(function(e){
-                                   e.preventDefault();
-                                })
-                                .attr({'href': '', 'class': 'item-autocomplete'})
-                                .data(data.items[i])
-                                .html(data.items[i].label)                
-                            )).appendTo(autocompleteinner);
-                        }
-                        html+="</ul>";
-                    }
+                    success: self.printSource
                 });
+               }
            }
        });
      }

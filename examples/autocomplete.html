@@ -6,8 +6,8 @@
         body{padding: 20;}
         #autocomplete{border: 1px solid #000; padding: 2px 0;}
         #autocomplete li{list-style: none;}
-        #autocomplete li.selected{background-color: #0A246A;}
-        #autocomplete li.selected a{color: #FFF;}
+        #autocomplete li.selected, #autocomplete li:hover{background-color: #0A246A;}
+        #autocomplete li.selected a, #autocomplete li:hover a{color: #FFF;}
         #autocomplete a{color: #000; line-height: 20px; display: block; padding: 0 14px; text-decoration: none;}
         </style>
         <script type="text/javascript" src="../jquery.min.js"></script>    
@@ -17,12 +17,31 @@
                 $("#autocomplete1").autocomplete({
                     'source': 'autocomplete_example.json'
                 });
+                $("#autocomplete2").autocomplete({
+                    'source': {
+                        "items": [
+                                {"label": "Test 1x", "value": "Test 1"},
+                                {"label": "Test 2x", "value": "Test 2"},
+                                {"label": "Test 3x", "value": "Test 3"},
+                                {"label": "Test 4x", "value": "Test 4"},
+                                {"label": "Test 5x", "value": "Test 5"},
+                                {"label": "Test 6x", "value": "Test 6"},
+                                {"label": "Test 7x", "value": "Test 7"},
+                                {"label": "Test 8x", "value": "Test 8"},
+                                {"label": "Test 9x", "value": "Test 5"},
+                                {"label": "Test 10x", "value": "Test 6"},
+                                {"label": "Test 11x", "value": "Test 7"},
+                                {"label": "Test 12x", "value": "Test 8"}
+                            ]
+                        }
+                });                
             });
         </script>
     </head>
     <body>
         <form method="get" action="">
             <input type="text" id="autocomplete1" />
+            <input type="text" id="autocomplete2" />
         </form>
     </body>
 </head>
