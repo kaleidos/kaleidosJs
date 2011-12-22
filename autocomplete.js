@@ -163,7 +163,15 @@
                     return false;  
                }
                if(typeof self.source == 'object'){
-                self.printSource(self.source);
+                var source = {};
+                source.items = new Array();
+                for(var i=0; i<self.source.items.length; i++){
+                    var str = self.source.items[i].label.substring(0, self.input.val().length);
+                    if(str==self.input.val()){
+                        source.items.push(self.source.items[i]);
+                    }
+                }
+                self.printSource(source);
                }else{
                 $.ajax({
                     type: 'get', 
