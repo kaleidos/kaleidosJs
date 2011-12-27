@@ -1,6 +1,10 @@
 /* Kaleidos Notifier.js 
- * Version 0.1 
- * (For of https://github.com/Srirangan/notifer.js/) */
+ *
+ * Copyright (c) 2011 Kaleidos <hello@kaleidos.net>
+ * Copyright (c) 2011 Andrei Antoukh <niwi@niwi.be>
+ *
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+*/
 
 (function($){
     var defaults = {
