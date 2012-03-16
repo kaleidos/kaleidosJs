@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Same Height</title>
+        <script type="text/javascript" src="../jquery.min.js"></script>    
+        <script type="text/javascript" src="../sameheight.js"></script>
+    </head>
+    <body>
+        <div id="block01" style="background-color: red; width: 200; float: left;" class="sameheight" data-sameheight="#block02">
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan orci eget orci convallis eget euismod risus aliquam. Aenean sollicitudin varius eros eu tristique. Quisque sed dolor libero, vel vulputate tortor. Aenean pellentesque aliquet libero. Fusce convallis, enim eu porttitor lacinia, quam felis ultrices dolor, quis semper quam metus in ligula. Fusce et est eget orci luctus vehicula. Duis sit amet congue magna. Aliquam porttitor mollis purus nec lacinia. In hac habitasse platea dictumst. Vivamus ultricies lobortis odio, dapibus lobortis leo ultrices vel. Suspendisse nibh turpis, rutrum eget vehicula a, rhoncus et felis. Donec quis mauris ac metus mollis sollicitudin eu non elit. Nulla elementum sagittis eros vel pellentesque. Nullam imperdiet semper vehicula. Quisque id tellus urna, et volutpat sem. Integer et erat in metus sodales rhoncus at dictum massa.</p>
+        </div>
+
+        <div id="block02" style="background-color: blue; overflow: auto; width: 400;">
+             <div id="block03" style="background-color: green; width: 200; float: left;" class="sameheight" data-sameheight="#block04" >
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce accumsan orci eget orci convallis eget euismod risus aliquam. Aenean sollicitudin varius eros eu tristique. Quisque sed dolor libero, vel vulputate tortor.</p>
+            </div>
+
+            <div id="block04"style="background-color: black; width: 200; float: left; color:#FFF;">
+     <p> Aenean pellentesque aliquet libero. Fusce convallis, enim eu porttitor lacinia, quam felis ultrices dolor, quis semper quam metus in ligula. Fusce et est eget orci luctus vehicula. Duis sit amet congue magna. Aliquam porttitor mollis purus nec lacinia. In hac habitasse platea dictumst. Vivamus ultricies lobortis odio, dapibus lobortis leo ultrices vel. Suspendisse nibh turpis, rutrum eget vehicula a, rhoncus et felis.</p>
+            </div>
+        </div>
+    <script>
+    $(document).ready(function(){
+        $.fn.sameheight({
+            'searchSelector': '.sameheight'
+        });
+    });
+    </script>
+    </body>
+</html>    
