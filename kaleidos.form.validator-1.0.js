@@ -21,6 +21,7 @@
             ajax: false,
             ajaxSuccess: function(data){
                 if(data.submit){
+                    self.form.data('ajax-valid', true);
                     self.form.submit();
                 } else {
                     var errors = new Array(); 
@@ -40,13 +41,13 @@
             },
             presubmitValidation: false,
             onPrintError: function(){},
-            globalErrorContainer: function(){
+            globalErrorContainer: function() {
                 if(!this.globalErrorObject){
                     var globalerror = $(document.createElement('div'))
-                    .attr('class', 'global-error');
+                        .attr('class', 'global-error');
                     this.form.prepend(globalerror);
                     this.globalErrorObject = this.form.find('.global-error');
-                }             
+                }
             },
             printGlobalErrors: function(errors){
                 var html = '';
@@ -90,6 +91,9 @@
                 }
             },
             submit: function(event){
+                if(this.form.data('ajax-valid')){
+                    return true;
+                }
                 valid = this.validate();
                 this.printErrors();
                  
@@ -116,20 +120,20 @@
             },
             validate: function(){
                  var valid = true;
-                 for(var i=0; i<this.elements.length; i++){
-                    if(!this.isValid($(this.elements[i]))){
+                 for(var i=0; i<this.elements.length; i++) {
+                    if(!this.isValid($(this.elements[i]))) {
                          valid = false;
                     }                 
                  }
     
                  return valid;
             },
-            validateField: function(field){
+            validateField: function(field) {
                 this.isValid(field);
                 this.printError(field);
             },
-            isValid: function(field){
-                if (field.attr('type')=='submit'){
+            isValid: function(field) {
+                if (field.attr('type') == 'submit'){
                     return true;
                 } 
                  
@@ -139,7 +143,7 @@
                     'email': 'Mail invalid'
                 };
                 
-                if (this.errorsMsgs[field.attr('name')]!=undefined){
+                if (this.errorsMsgs[field.attr('name')] !== undefined){
                     var msgs = $.extend(defaultmsgs, this.errorsMsgs[field.attr('name')]);
                 } else {
                     var msgs = defaultmsgs;
@@ -147,9 +151,9 @@
                 
                 field.data('error', false);
                 
-                if (field.attr('required')!=undefined){
-                    if (field.attr('type')=='checkbox'){
-                        if (!field.is(':checked')){
+                if (field.attr('required') !== undefined) {
+                    if (field.attr('type') == 'checkbox') {
+                        if (!field.is(':checked')) {
                             valid = false;
                             field.data('error', msgs.required);                        
                         }
@@ -203,6 +207,7 @@
                 .bind("submit", function(event){ self.submit(event); });
 
             self.form = $(this);
+            self.form.data('ajax-valid', false);
         }
          
         $(this).data('validator', self);
