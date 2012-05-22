@@ -35,11 +35,14 @@ var Form = Backbone.View.extend({
      *  `resetOnInit`
      *      
      *      same as `clearOnInit` but reset form.
+     *
+     *  `fieldErrorsOnGlobalBox`
     */ 
 
     initialize: function() {
         _.bindAll(this, 'validate', 'clear', 'setErrors', 'collectData', 'submit',
-                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 'gettext');
+                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 'gettext',
+                'setErrorsFieldsStandatd', 'setErrorsFieldsOnGlobalBox', 'setErrorsGlobal');
 
         if (this.options.clearOnInit) {
             this.clear();
@@ -269,40 +272,81 @@ var Form = Backbone.View.extend({
         return has_errors;
     },
 
-    /* setErrors(errors)
-     *
-     * Draw dinamicaly all errors returned by `render_json_error` from 
-     * `django-superview`
-     *
-     * TODO: all errors to global option, not implemented.
-    */
+    searchField: function(key) {
+        return this.$("[name='" + key + "']");
+    },
 
     setGlobalErrorsBox: function(dom) {
         this.globalErrorsBox = $(dom);
     },
 
+    setErrorsGlobal: function(errors) {
+        var self = this;
+        _.each(errors.global, function(item) {
+            self.globalErrorsBox.append(self.make('li', {}, item));
+        });
+        this.globalErrorsBox.show();
+    },
+
+    setErrorsFieldsStandatd: function(errors) {
+        var self = this;
+
+        _.each(errors.form, function(error_list, key) {
+            var field = self.searchField(key);
+            var error_list_dom = $(self.make('ul', {'class': 'errorlist', 'id': 'field-' + field.attr('id')}));
+
+            _.each(error_list, function(item) {
+                error_list_dom.append(self.make('li', {}, item));
+            });
+
+            error_list_dom.insertBefore(field);
+        });
+    },
+
+    setErrorsFieldsOnGlobalBox: function(errors) {
+        var error_list = new Array();
+        var self = this;
+
+        _.each(errors.form, function(field_errors, key) {
+            var field = self.searchField(key);
+            var field_name = field.attr('name');
+            
+            if (errors.fields !== undefined) {
+                if (errors.fields[field_name] !== undefined) {
+                    field_name = errors.fields[field_name].name;
+                }
+            }
+
+            _.each(field_errors, function(item) {
+                var field_error_string = "<strong>" + field_name + "</strong>: " + item;
+                error_list.push(field_error_string);
+            });
+        });
+
+        this.setErrorsGlobal({global:error_list});
+    },
+
+    /* setErrors(errors)
+     *
+     * Draw dinamicaly all errors returned by `render_json_error` from 
+     * `django-superview`
+     *
+    */
+
     setErrors: function(errors) {
         this.clear();
         var self = this;
 
-        if (errors.form) {
-            _.each(errors.form, function(error_list, key) {
-                var field = self.$("[name='" + key + "']");
-                var error_list_dom = $(self.make('ul', {'class': 'errorlist', 'id': 'field-' + field.attr('id')}));
-
-                _.each(error_list, function(item) {
-                    error_list_dom.append(self.make('li', {}, item));
-                });
-
-                error_list_dom.insertBefore(field);
-            });
-        }
-        
         if (errors.global && this.globalErrorsBox !== null) {
-            _.each(errors.global, function(item) {
-                self.globalErrorsBox.append(self.make('li', {}, item))
-            });
-            this.globalErrorsBox.show();
+            this.setErrorsGlobal(errors);
+        }
+
+        if (errors.form) {
+            if (this.options.fieldErrorsOnGlobalBox) {
+                this.setErrorsFieldsOnGlobalBox(errors);
+            } else {
+                this.setErrorsFieldsStandatd(errors);
+            }
         }
     }
 });

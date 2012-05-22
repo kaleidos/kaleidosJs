@@ -50,9 +50,31 @@
         </form>
     </div>
 
+    <hr />
+
+    <div class="ajax-validation-allglobal">
+
+        <h3>Simple ajax validation with all global messages</h3>
+
+        <ul id="allglobal-errors" style="display:none"></ul>
+
+        <form action="sample-errors.js" method="get" id="allglobal">
+            <p>
+                <label>Username:</label>
+                <input type="text" name="username" />
+            </p>
+            <p>
+                <label>Password:</label>
+                <input type="password" name="password" />
+            </p>
+            <p>
+                <input type="submit" value="Save" />
+            </p>
+        </form>
+    </div>
+
 
     <script type="text/javascript">
-    $(function() {
         /* Simple Validate */
         
         var response1 = {
@@ -64,7 +86,11 @@
                 "global": [
                     "Unexpexted error1",
                     "Unexpexted error2"
-                ]
+                ],
+                "fields": {
+                    "username": { "name": "Username" },
+                    "password": { "name": "Password" }
+                }
             },
             "success": false
         };
@@ -110,6 +136,27 @@
 
         var login2 = new LoginTest2({el:$(".ajax-validation-global")});
 
-    });
+        /* Validation with global errors */
+
+        var LoginTest3 = Backbone.View.extend({
+            events: {
+                'submit #allglobal': 'onFormSubmit'
+            },
+
+            initialize: function() {
+                _.bindAll(this, 'onFormSubmit');
+                this.form = new Form({el: $("#allglobal"), fieldErrorsOnGlobalBox: true});
+                this.form.setGlobalErrorsBox($("#allglobal-errors"));
+            },
+
+            onFormSubmit: function(event) {
+                event.preventDefault();
+                this.form.setErrors(response1.errors);
+            }
+        });
+
+        var login3 = new LoginTest3({
+            el:$(".ajax-validation-allglobal"),
+        });
     </script>
 </body>
