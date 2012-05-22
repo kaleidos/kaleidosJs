@@ -17,6 +17,7 @@
  * Version: 0.2
 */
 
+
 var Form = Backbone.View.extend({
     /* CONSTRUCTOR
      * 
@@ -56,17 +57,19 @@ var Form = Backbone.View.extend({
             this.gettext_func = window.gettext;
         }
 
+        this.globalErrorsBox = null;
         this.default_errors = {
             'required': this.gettext('This field is required')
         };
-        
-        this.globalErrorsBox = null;
         this.errors = {}
-
         
         _.extend(this.errors, this.default_errors)
         if (this.options.errors == undefined) {
             _.extend(this.errors, this.options.errors);
+        }
+        
+        if (this.options.higlight === undefined) {
+            this.options.higlight = 'error-field';
         }
     },
 
@@ -293,6 +296,7 @@ var Form = Backbone.View.extend({
 
         _.each(errors.form, function(error_list, key) {
             var field = self.searchField(key);
+            self.higlight(field);
             var error_list_dom = $(self.make('ul', {'class': 'errorlist', 'id': 'field-' + field.attr('id')}));
 
             _.each(error_list, function(item) {
@@ -310,6 +314,8 @@ var Form = Backbone.View.extend({
         _.each(errors.form, function(field_errors, key) {
             var field = self.searchField(key);
             var field_name = field.attr('name');
+
+            self.higlight(field);
             
             if (errors.fields !== undefined) {
                 if (errors.fields[field_name] !== undefined) {
@@ -325,6 +331,13 @@ var Form = Backbone.View.extend({
 
         this.setErrorsGlobal({global:error_list});
     },
+
+    higlight: function(field) {
+        if (this.options.higlight !== undefined){
+            field.addClass(this.options.higlight);
+        }
+    },
+
 
     /* setErrors(errors)
      *
