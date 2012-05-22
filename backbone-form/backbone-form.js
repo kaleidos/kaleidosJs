@@ -9,11 +9,12 @@
  *
  * Changelog:
  *  * 21-05-2012 - First public version. (0.1)
+ *  * 22-05-2012 - Add global errors. (0.2)
  *
  *
  * Author: Andrei Antoukh <andrei.antoukh@kaleidos.net>
  * License: BSD
- * Version: 0.1
+ * Version: 0.2
 */
 
 var Form = Backbone.View.extend({
@@ -38,7 +39,7 @@ var Form = Backbone.View.extend({
 
     initialize: function() {
         _.bindAll(this, 'validate', 'clear', 'setErrors', 'collectData', 'submit',
-                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress');
+                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 'gettext');
 
         if (this.options.clearOnInit) {
             this.clear();
@@ -48,10 +49,15 @@ var Form = Backbone.View.extend({
             this.reset();
         }
 
-        this.default_errors = {
-            'required': gettext('This field is required')
-        };
+        if (window.gettext !== undefined) {
+            this.gettext_func = window.gettext;
+        }
 
+        this.default_errors = {
+            'required': this.gettext('This field is required')
+        };
+        
+        this.globalErrorsBox = null;
         this.errors = {}
 
         
@@ -60,6 +66,13 @@ var Form = Backbone.View.extend({
             _.extend(this.errors, this.options.errors);
         }
     },
+
+    gettext: function(data) {
+        if (this.gettext_func) {
+            return this.gettext_func(data);
+        }
+        return data;
+    },
     
     /* 
      * Remove all errors on form.
@@ -67,6 +80,11 @@ var Form = Backbone.View.extend({
 
     clear: function() {
         this.$("ul.errorlist").remove();
+
+        if (this.globalErrorsBox) {
+            this.globalErrorsBox.html("");
+            this.globalErrorsBox.hide();
+        }
     },
 
     /*
@@ -256,9 +274,12 @@ var Form = Backbone.View.extend({
      * Draw dinamicaly all errors returned by `render_json_error` from 
      * `django-superview`
      *
-     * TODO: global form errors not implemented.
      * TODO: all errors to global option, not implemented.
     */
+
+    setGlobalErrorsBox: function(dom) {
+        this.globalErrorsBox = $(dom);
+    },
 
     setErrors: function(errors) {
         this.clear();
@@ -266,7 +287,7 @@ var Form = Backbone.View.extend({
 
         if (errors.form) {
             _.each(errors.form, function(error_list, key) {
-                var field = self.$("#id_" + key);
+                var field = self.$("[name='" + key + "']");
                 var error_list_dom = $(self.make('ul', {'class': 'errorlist', 'id': 'field-' + field.attr('id')}));
 
                 _.each(error_list, function(item) {
@@ -277,8 +298,11 @@ var Form = Backbone.View.extend({
             });
         }
         
-        if (errors.global) {
-            // TODO
+        if (errors.global && this.globalErrorsBox !== null) {
+            _.each(errors.global, function(item) {
+                self.globalErrorsBox.append(self.make('li', {}, item))
+            });
+            this.globalErrorsBox.show();
         }
     }
 });
