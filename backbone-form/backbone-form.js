@@ -10,6 +10,7 @@
  * Changelog:
  *  * 21-05-2012 - First public version. (0.1)
  *  * 22-05-2012 - Add global errors. (0.2)
+ *               - Add higlight field.
  *
  *
  * Author: Andrei Antoukh <andrei.antoukh@kaleidos.net>
@@ -17,6 +18,9 @@
  * Version: 0.2
 */
 
+if (window.gettext === undefined) {
+    window.gettext = function(data) { return data; }
+}
 
 var Form = Backbone.View.extend({
     /* CONSTRUCTOR
@@ -40,9 +44,18 @@ var Form = Backbone.View.extend({
      *  `fieldErrorsOnGlobalBox`
     */ 
 
+    defaultHiglightClass: 'error-field',
+
+    defaultFormErrors: {
+        'required': gettext('This field is required.'),
+        'maxlength': gettext('Field contents  exceeds the maximum size allowed.'),
+        'minlength': gettext('The label is smaller than allowed.')
+    },
+
+
     initialize: function() {
         _.bindAll(this, 'validate', 'clear', 'setErrors', 'collectData', 'submit',
-                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 'gettext',
+                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 
                 'setErrorsFieldsStandatd', 'setErrorsFieldsOnGlobalBox', 'setErrorsGlobal');
 
         if (this.options.clearOnInit) {
@@ -53,33 +66,20 @@ var Form = Backbone.View.extend({
             this.reset();
         }
 
-        if (window.gettext !== undefined) {
-            this.gettext_func = window.gettext;
-        }
 
         this.globalErrorsBox = null;
-        this.default_errors = {
-            'required': this.gettext('This field is required')
-        };
         this.errors = {}
         
-        _.extend(this.errors, this.default_errors)
+        _.extend(this.errors, this.defaultFormErrors)
         if (this.options.errors == undefined) {
             _.extend(this.errors, this.options.errors);
         }
         
         if (this.options.higlight === undefined) {
-            this.options.higlight = 'error-field';
+            this.options.higlight = this.defaultHiglightClass;
         }
     },
 
-    gettext: function(data) {
-        if (this.gettext_func) {
-            return this.gettext_func(data);
-        }
-        return data;
-    },
-    
     /* 
      * Remove all errors on form.
     */
@@ -90,6 +90,10 @@ var Form = Backbone.View.extend({
         if (this.globalErrorsBox) {
             this.globalErrorsBox.html("");
             this.globalErrorsBox.hide();
+        }
+
+        if (this.options.higlight) {
+            this.$("." + this.options.higlight).removeClass(this.options.higlight);
         }
     },
 
@@ -256,7 +260,7 @@ var Form = Backbone.View.extend({
 
     validate: function() {
         var required_fields = _.filter(this.fields(), function(item) {
-            return item.attr('required') === 'true';
+            return item.hasClass('required');
         });
 
         var errors = {};
