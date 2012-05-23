@@ -26,6 +26,7 @@
             </p>
             <p>
                 <input type="submit" value="Save" />
+                <input type="button" class="clear" value="Clear" />
             </p>
         </form>
     </div>
@@ -49,6 +50,7 @@
             </p>
             <p>
                 <input type="submit" value="Save" />
+                <input type="button" class="clear" value="Clear" />
             </p>
         </form>
     </div>
@@ -72,6 +74,7 @@
             </p>
             <p>
                 <input type="submit" value="Save" />
+                <input type="button" class="clear" value="Clear" />
             </p>
         </form>
     </div>
@@ -100,17 +103,22 @@
 
         var LoginTest1 = Backbone.View.extend({
             events: {
+                'click .clear': 'onClearClicked',
                 'submit #simple': 'onFormSubmit'
             },
 
             initialize: function() {
-                _.bindAll(this, 'onFormSubmit');
+                _.bindAll(this, 'onFormSubmit', 'onClearClicked');
                 this.form = new Form({el: $("#simple")});
             },
 
             onFormSubmit: function(event) {
                 event.preventDefault();
                 this.form.setErrors(response1.errors);
+            },
+
+            onClearClicked: function() {
+                this.form.clear();
             }
         });
 
@@ -122,11 +130,12 @@
 
         var LoginTest2 = Backbone.View.extend({
             events: {
+                'click .clear': 'onClearClicked',
                 'submit #global': 'onFormSubmit'
             },
 
             initialize: function() {
-                _.bindAll(this, 'onFormSubmit');
+                _.bindAll(this, 'onFormSubmit', 'onClearClicked');
                 this.form = new Form({el: $("#global")});
                 this.form.setGlobalErrorsBox($("#global-errors"));
             },
@@ -134,6 +143,10 @@
             onFormSubmit: function(event) {
                 event.preventDefault();
                 this.form.setErrors(response1.errors);
+            },
+
+            onClearClicked: function() {
+                this.form.clear();
             }
         });
 
@@ -143,11 +156,12 @@
 
         var LoginTest3 = Backbone.View.extend({
             events: {
+                'click .clear': 'onClearClicked',
                 'submit #allglobal': 'onFormSubmit'
             },
 
             initialize: function() {
-                _.bindAll(this, 'onFormSubmit');
+                _.bindAll(this, 'onFormSubmit', 'onClearClicked');
                 this.form = new Form({el: $("#allglobal"), fieldErrorsOnGlobalBox: true});
                 this.form.setGlobalErrorsBox($("#allglobal-errors"));
             },
@@ -155,6 +169,10 @@
             onFormSubmit: function(event) {
                 event.preventDefault();
                 this.form.setErrors(response1.errors);
+            },
+
+            onClearClicked: function() {
+                this.form.clear();
             }
         });
 
