@@ -12,7 +12,7 @@
         fadeIn: false,
         fadeInDuration: 'slow',
         fadeOut: false,
-        fadeOutDuration: 'slow',        
+        fadeOutDuration: 'slow',
         source: 'none', /* none, ajax, iframe */
         iframeSource: false,
         iframeWidth: '',
@@ -24,9 +24,9 @@
         ajaxEnd: function(){},
         onload: function(){},
         openstandard: function(){
-            if(this.overlay){                 
+            if(this.overlay){
                 this.overlay.css({
-                    'height': $(window).height(),
+                    'height': $(document).height(),
                     'width': $(window).width(),
                     'background': this.background,
                     'opacity': this.opacity
@@ -66,11 +66,11 @@
                         var top = ($(document).scrollTop()) + ($(window).height()/2) - (this.selector.outerHeight()/2);
                         if (top < this.lightboxTop) {
                             top = $(document).scrollTop()+this.lightboxTop;
-                        }                      
+                        }
                     }else{
                         top = $(document).scrollTop()+this.lightboxTop;
                     }
-                }    
+                }
                 
                 if(this.overrideLeft){
                     left = this.overrideLeft;
@@ -83,7 +83,7 @@
                     'visibility': 'visible',
                     'left': left,
                     'top': top,
-                    'z-index': 100
+                    'z-index': 1002
                 });
                 
                 this.first_load = true;
@@ -96,7 +96,7 @@
                 if(this.overlay) this.overlay.show();
                 this.selector.show();
                 this.onload();
-            } 
+            }
         },
         open: function(){
             if(this.source=='ajax' && this.ajaxSource && (!this.first_load || this.forceReload)){
@@ -104,7 +104,7 @@
                     'top': ($(document).scrollTop()) + ($(window).height()/2) - (55/2),
                     'left': ($(document).width()/2)-(54/2),
                     'display': 'block'
-                });                
+                });
                 this.ajaxInit();
                 var self = this;
                 $.ajax({
@@ -137,14 +137,14 @@
      };
      
      if($(this).data('lightbox')!=undefined){
-        var self = $.extend($(this).data('lightbox'), self); 
+        var self = $.extend($(this).data('lightbox'), self);
      }else{
-        var self = $.extend(defaults, self);    
+        var self = $.extend(defaults, self);
         self.first_load = false;
-        self.selector = $(this);        
+        self.selector = $(this);
      }
      
      $(this).data('lightbox', self);
      return self;
- };  
+ };
 })(jQuery);
