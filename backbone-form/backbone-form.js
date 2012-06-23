@@ -11,6 +11,8 @@
  *  * 21-05-2012 - First public version. (0.1)
  *  * 22-05-2012 - Add global errors. (0.2)
  *               - Add higlight field.
+ *  * 28-05-2012 - Add ie fixes. (0.3)
+ *               - Add ie ajax upload files. (very experimental)
  *
  *
  * Author: Andrei Antoukh <andrei.antoukh@kaleidos.net>
@@ -55,7 +57,7 @@ var Form = Backbone.View.extend({
 
     initialize: function() {
         _.bindAll(this, 'validate', 'clear', 'setErrors', 'collectData', 'submit',
-                'success', 'error', 'reset', 'getXhr', 'fields', 'uploadProgress', 
+                'reset', 'getXhr', 'fields', 'uploadProgress', 'ieSubmitFallback',
                 'setErrorsFieldsStandatd', 'setErrorsFieldsOnGlobalBox', 'setErrorsGlobal');
 
         if (this.options.clearOnInit) {
@@ -65,7 +67,6 @@ var Form = Backbone.View.extend({
         if (this.options.resetOnInit) {
             this.reset();
         }
-
 
         this.globalErrorsBox = null;
         this.errors = {}
@@ -131,6 +132,61 @@ var Form = Backbone.View.extend({
         }
     },
 
+    ieSubmitFallback: function(opts) {
+        var success = opts.success || null;
+        var error = opts.error || null;
+
+        var url = opts.url || this.$el.attr('action');
+        var type = opts.type || this.$el.attr('type') || 'post';
+
+
+        // Remove old iframe
+        this.$el.parent().find("#upload_iframe").remove();
+        
+        // Create new iframe
+        var iframe = document.createElement("iframe");
+        iframe.setAttribute("id", "upload_iframe");
+        iframe.setAttribute("name", "upload_iframe");
+        iframe.setAttribute("width", "0");
+        iframe.setAttribute("height", "0");
+        iframe.setAttribute("border", "0");
+        iframe.setAttribute("style", "width: 0; height: 0; border: none;");
+
+        this.el.parentNode.appendChild(iframe);
+        this.$el.attr('target', 'upload_iframe');
+
+        var iframeId = document.getElementById("upload_iframe");
+        
+        var eventHandler = function () {
+            var content = null;
+            if (iframeId.detachEvent) iframeId.detachEvent("onload", eventHandler);
+            else iframeId.removeEventListener("load", eventHandler, false);
+ 
+            // Message from server...
+            if (iframeId.contentDocument) {
+                content = iframeId.contentDocument.body.innerText;
+            } else if (iframeId.contentWindow) {
+                content = iframeId.contentWindow.document.body.innerText;
+            } else if (iframeId.document) {
+                content = iframeId.document.body.innerText;
+            }
+            
+            if (content.length > 0) {
+                if (success !== null && success !== undefined) {
+                    success(JSON.parse(content));
+                }
+            }
+ 
+            // Del the iframe...
+            setTimeout('iframeId.parentNode.removeChild(iframeId)', 250);
+        }
+ 
+        if (iframeId.addEventListener) iframeId.addEventListener("load", eventHandler, true);
+        if (iframeId.attachEvent) iframeId.attachEvent("onload", eventHandler);
+
+        this.el.submit();
+    },
+
     /* submit(opts):  Makes ajax submit of the asociated form
      * 
      * Posible params:
@@ -166,8 +222,24 @@ var Form = Backbone.View.extend({
             opts = {};
         }
 
-        var success = opts.success || this.success;
-        var error = opts.error || this.error;
+        var has_files = false;
+        var is_ie = false;
+
+        if (this.$("input[type=file]").length > 0) {
+            has_files = true;
+        }
+        
+        if (navigator.appVersion.indexOf("MSIE") != -1) {
+            is_ie = true;
+
+            if (has_files) {
+                return this.ieSubmitFallback(opts);
+            }
+        }
+
+        var success = opts.success || null;
+        var error = opts.error || null;
+
         var url = opts.url || this.$el.attr('action');
         var type = opts.type || this.$el.attr('type') || 'post';
         var dataType = opts.dataType || 'json';
@@ -177,11 +249,14 @@ var Form = Backbone.View.extend({
         var ajax_params = {
             url: url,
             type: type,
-            success: success,
-            error: error,
-            dataType: dataType,
-            xhr: this.getXhr,
+            dataType: dataType
         };
+
+        if (success !== null) _.extend(ajax_params, {success:success});
+        if (error !== null) _.extend(ajax_params, {error:error});
+        if (!is_ie) _.extend(ajax_params, {xhr: this.getXhr});
+
+        _.extend(ajax_params, jquery_lowlevel_opts);
 
         if (opts.data !== undefined) {
             ajax_params['data'] = opts.data;
@@ -194,26 +269,9 @@ var Form = Backbone.View.extend({
             ajax_params['contentType'] = false;
         }
 
-        _.extend(ajax_params, jquery_lowlevel_opts);
         return $.ajax(ajax_params);
     },
 
-    /*
-     * Fallback method for onsuccess submit.
-    */
-
-    success: function(data) {
-        if (typeof data === "object" && data.errors && data.errors.form) {
-            this.setErrors(this.errors.form);
-        }
-    },
-    
-    /* 
-     * Fallback method for onerror submit 
-    */
-
-    error: function() {},
-    
     /* collectData(opts)
      *
      * Collects form data. If form has attribute 'enctype' and is equal to 'multipart/form-data'
