@@ -13,11 +13,14 @@
  *               - Add higlight field.
  *  * 28-05-2012 - Add ie fixes. (0.3)
  *               - Add ie ajax upload files. (very experimental)
+ *  * 24-06-2012 - Remove client validation. (0.4)
+ *               - Add envents
+ *               - Code improvements.
  *
  *
  * Author: Andrei Antoukh <andrei.antoukh@kaleidos.net>
  * License: BSD
- * Version: 0.2
+ * Version: 0.4
 */
 
 if (window.gettext === undefined) {
